@@ -1,0 +1,70 @@
+﻿@model Movies.Web.Models.Movies.SearchResults
+@using  Movies.Web.Models.Movies
+@{
+    ViewData["Title"] = "Movies Search Results";
+
+    var results = Model;
+    var searchCriteria = new SearchCriteria();
+    if (ViewBag.SearchCriteria != null)
+    {
+        searchCriteria = ViewBag.SearchCriteria;
+    }
+    var paging = new Paging();
+    if (ViewBag.Paging != null)
+    {
+        paging = ViewBag.Paging;
+    }
+}
+
+@await Html.PartialAsync("SearchBox", searchCriteria)
+
+@if (results == null)
+{
+    <h2 class="mt-5">@ViewBag.Feedback</h2>
+}
+
+@if (results != null)
+{
+    <section class="movies mt-5" id="movies">
+        <h2>@ViewBag.Paging.Status</h2>
+        <div class="row">
+            @foreach (var movie in Model.Results)
+            {
+                <partial name="MovieResult" model="movie" />
+            }
+        </div>
+    </section>
+
+    <section id="paging">
+        <div class="mt-5">
+            <ul class="pagination">
+                <li class="page-item @(!paging.ShowFirst? "disabled":"")">
+                    <a href="@Html.Raw(paging.BaseUrl)&pageno=1" class="page-link">&lt;&lt;</a>
+                </li>
+
+                <li class="page-item @(!paging.ShowPrevious? "disabled":"")">
+                    <a href="@Html.Raw(paging.BaseUrl)&pageno=@(paging.CurrentPage -1)" class="page-link">&lt;</a>
+                </li>
+                <li class="page-item  @(!paging.ShowNext? "disabled":"")">
+                    <a href="@Html.Raw(paging.BaseUrl)&pageno=@(paging.CurrentPage + 1)" class="page-link">&gt;</a>
+                </li>
+
+                <li class="page-item  @(!paging.ShowLast? "disabled":"")">
+                    <a href="@Html.Raw(paging.BaseUrl)&pageno=@(paging.TotalPages)" class="page-link">&gt;&gt;</a>
+                </li>
+            </ul>
+        </div>
+    </section>
+    <h6>@ViewBag.Paging.Status</h6>
+}
+
+<div>
+    <a asp-action="Index" class="btn btn-primary">Home</a> <a asp-action="Search" class="btn btn-primary">New Search</a>
+</div>
+
+@section StructuredDataScripts{ 
+<script type="application/ld+json">
+  @Html.Raw(ViewBag.JsonLd)
+ </script>
+}
+

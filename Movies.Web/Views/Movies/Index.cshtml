@@ -1,0 +1,24 @@
+﻿@model Movies.Web.Models.Movies.SearchResults
+@using  Movies.Web.Models.Movies
+@{
+    ViewData["Title"] = "Movies List";
+    var searchCriteria = new SearchCriteria();
+    if (ViewBag.SearchCriteria != null)
+    {
+        searchCriteria = ViewBag.SearchCriteria;
+    }
+}
+
+@await Html.PartialAsync("SearchBox", new SearchCriteria())
+
+@if (Model != null) { 
+<section class="movies mt-5" id="movies">
+    <h2>@ViewBag.Feedback</h2>
+    <div class="row">
+        @foreach (var movie in Model.Results)
+        {
+            <partial name="MovieResult" model="movie" />
+        }
+    </div>
+</section>
+}

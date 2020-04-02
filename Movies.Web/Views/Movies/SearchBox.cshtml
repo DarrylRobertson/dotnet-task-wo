@@ -1,0 +1,22 @@
+﻿@model SearchCriteria
+@using  Movies.Web.Models.Movies
+@{ 
+    //TODO: Make range
+    List<SelectListItem> items = new List<SelectListItem>();
+    items.Add(new SelectListItem { Text = "Year", Value = "" });
+    for (var x = DateTime.Today.Year; x >= 1940; x--) { 
+    items.Add(new SelectListItem { Text = $"{x}", Value = $"{x}", Selected = (x.ToString() == Model.Year) });
+    }
+}
+
+<section class="searchform">
+    <h2>Search Our Movies Database</h2>
+    @using (Html.BeginForm("Search", "Movies", FormMethod.Get, new { @class = "form-inline" }))
+    {
+        <div class="form-group mb-2">
+            @Html.TextBox("keyword", @Model.Keyword, new { @class = "form-control mr-2", @placeholder = "Movie name...", @required = true })
+            @Html.DropDownList("year", items,new { @class = "form-control mr-2" })
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">Search</button>
+    }
+</section>
