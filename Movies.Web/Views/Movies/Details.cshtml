@@ -1,5 +1,19 @@
 ﻿@model Movies.Web.Models.Omdb.OmdbDetails
-@if (Model.Response == "True")
+
+@{
+    if (Model != null && Model.Response == "True")
+    {
+        ViewData["Title"] = Model.Title + " (" + Model.Year + ")";
+    }
+    else
+    {
+        ViewData["Title"] = "Movie not found";
+    }
+}
+
+@await Html.PartialAsync("SearchBoxAutoSuggest")
+
+@if (Model != null && Model.Response == "True")
 {
     <div>
         <h4>@Model.Title</h4>

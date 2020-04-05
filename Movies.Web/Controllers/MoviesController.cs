@@ -95,14 +95,14 @@ namespace Movies.Web.Controllers
 
         public IActionResult Details(string id, string title = "")
         {
-
+            var apiKey = _config.GetValue<string>("APIKey");
+            ViewBag.APIKey = apiKey;
             if (string.IsNullOrEmpty(id))
             {
                 return View();
             }
             else
             {
-                var apiKey = _config.GetValue<string>("APIKey");
                 var apiHelper = new OmdbAPIHelper(apiKey, _cache);
                 var findCriteria = new FindCriteria { Id = id };
 
@@ -111,6 +111,11 @@ namespace Movies.Web.Controllers
 
                 var movieDetail = new OmdbDetails();
                 var response = task.Result;
+
+                if (response.IsValid == false)
+                {
+                    return View();
+                }
                 ViewBag.JsonLd = response.ToJsonLd();
                 return View(response);
 
